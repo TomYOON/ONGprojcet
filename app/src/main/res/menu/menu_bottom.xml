@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/tab1"
+        android:checked="true"
+        android:enabled="true"
+        android:icon="@drawable/ic_home"
+        android:title="홈"
+        app:showAsAction="always" >
+    </item>
+
+    <item
+        android:id="@+id/tab2"
+        android:enabled="true"
+        android:icon="@drawable/ic_posture"
+        android:title="나의 자세"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/tab3"
+        android:enabled="true"
+        android:icon="@drawable/ic_monitoring"
+        android:title="모니터링"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/tab4"
+        android:enabled="true"
+        android:icon="@drawable/ic_donation"
+        android:title="기부"
+        app:showAsAction="always" />
+
+</menu>

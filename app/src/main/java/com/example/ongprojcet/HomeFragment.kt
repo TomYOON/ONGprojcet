@@ -3,26 +3,72 @@ package com.example.ongprojcet
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
+import com.google.android.youtube.player.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_donation.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
     lateinit var asyncTask: currentTask
+    lateinit var videoId:String;
+    private val youtubeAPIKey = "AIzaSyBoFWKSgwIAjZVjJASoO8_cVwOzjCaq6NY";  //안써도 왜 되는걸까 신기함
+
+    var videoTitleList = arrayOf(
+        "바르게 앉는 법",
+        "오래 앉아 있는 사람들을 위한 영상",
+        "디스크 있는 사람들을 위한 영상",
+        "디스크 자가 진단과 스트레칭",
+        "앉아서 하는 스트레칭1",
+        "앉아서 하는 스트레칭2")  //스피너에 나올 키워드 목록
+
+    var videoIdList = arrayOf(
+        "Rjv7hnHkgXE",
+        "KNvldxi8TwU",
+        "_RXjbRdiFBs",
+        "N1SzXAHUhvo",
+        "-JzaMksAeew",
+        "5V8a5_LXXQs"
+    )
 
     override fun onPause() {
         //프레그먼트 바뀔 때 asynctask 종료
         Log.v("fragment", "onPause")
         asyncTask.cancel(true)
         super.onPause()
+    }
+
+    fun getYoutube(){
+        //video
+        youtubeThumbnailView.initialize("develop", object : YouTubeThumbnailView.OnInitializedListener {
+            override fun onInitializationSuccess(youTubeThumbnailView: YouTubeThumbnailView, youTubeThumbnailLoader: YouTubeThumbnailLoader) {
+                youTubeThumbnailLoader.setVideo(videoId)
+                youTubeThumbnailLoader.setOnThumbnailLoadedListener(object : YouTubeThumbnailLoader.OnThumbnailLoadedListener {
+                    override fun onThumbnailLoaded(youTubeThumbnailView: YouTubeThumbnailView, s: String) {
+                        youTubeThumbnailLoader.release()
+                    }
+
+                    override fun onThumbnailError(youTubeThumbnailView: YouTubeThumbnailView, errorReason: YouTubeThumbnailLoader.ErrorReason) {}
+                })
+            }
+
+            override fun onInitializationFailure(youTubeThumbnailView: YouTubeThumbnailView, youTubeInitializationResult: YouTubeInitializationResult) {}
+        })
+
+        youtubeThumbnailView.setOnClickListener {
+            //마지막 인자 true로 하면 전체화면 XX
+            val intent = YouTubeStandalonePlayer.createVideoIntent(activity, "develop", videoId, 0, true, false)
+            startActivity(intent)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,8 +86,22 @@ class HomeFragment : Fragment() {
         down.setImageResource(R.drawable.downw)
         center.setImageResource(R.drawable.heartw)
 
-        Log.v("fragment", "onViewCreated")
+        //spinner
+        youtube_spinner.setSelection(0)  //처음 요소가 기본값
+        youtube_spinner.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, videoTitleList)
+        youtube_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
 
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                Log.v("spinner check", "listener 호출됨")
+                videoId = videoIdList[position]
+                getYoutube()
+            }
+        }
+
+
+        Log.v("fragment", "onViewCreated")
     }
 
     override fun onCreateView(
@@ -249,7 +309,4 @@ class HomeFragment : Fragment() {
         }
 
     }
-
-
 }
-

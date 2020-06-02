@@ -16,6 +16,14 @@
         android:layout_marginEnd="76dp"
         android:layout_marginRight="76dp"
         android:layout_marginBottom="345dp"
-        android:text="모니터링 페이지"
+        android:text="모니터링 준비중..."
         android:textSize="36sp" />
+
+    <com.github.mikephil.charting.charts.RadarChart
+        android:id="@+id/chart1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/startButton"
+        android:padding="9dp"
+        android:visibility="visible" />
 </RelativeLayout>

@@ -12,8 +12,10 @@ class Posture(){
 
     var postureString = arrayOf("앞+오른쪽","앞","앞+왼쪽","왼 쪽","good","오른쪽","뒤 + 왼쪽","뒷 쪽","뒤+오른쪽")
     var postures = IntArray(9){0} // 자세 count 저장하는 array
+
     val abnormalThreshold = 10 //안좋은 자세의 정도 : 10도를 넘기면 안좋다고 일단 작성
     val abnormalContThreshold = 10 //안좋은 자세를 10번 연속으로 취하면 안좋다고 생각하고 일단 작성
+
 
 
     //lrAngle - : 좌, + : 우  fbAngle - : 뒤, +:앞

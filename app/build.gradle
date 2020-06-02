@@ -83,7 +83,13 @@ dependencies {
     compile 'com.pm10:indicator:1.0.2'//인디케이터
     implementation 'com.google.code.gson:gson:2.8.5'
 
-    implementation 'com.airbnb.android:lottie:2.5.5'  //**
+    implementation 'com.airbnb.android:lottie:2.5.5'
+    implementation files('libs\\YouTubeAndroidPlayerApi.jar')  //**
+
+    implementation 'com.github.grandstaish.paperparcel:paperparcel:1.0.0'
+    implementation 'com.github.grandstaish.paperparcel:paperparcel-kotlin:1.0.0'
+    kapt 'com.github.grandstaish.paperparcel:compiler:1.0.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
 
 repositories {

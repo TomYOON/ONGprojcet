@@ -45,6 +45,17 @@ class MyService: Service() {
     lateinit var ringtone: Ringtone
 
 
+    //알림 관련
+    val notificationHandler: NotificationHandler by lazy {
+        NotificationHandler(applicationContext)
+    }
+    var posture = Posture()
+    var alarmInterval = 10
+    var currentTime = 0L
+    var setNotify = false
+
+
+
     var offsetX = 0f
     var offsetZ = 0f
     var goodTime = 0 //%%
@@ -210,6 +221,9 @@ class MyService: Service() {
 
         connected = true
         connecting = false
+        var startTime = System.currentTimeMillis()
+        var intent = Intent(this, MainActivity::class.java)
+
 
 
 
@@ -235,8 +249,8 @@ class MyService: Service() {
                     //test를 위해 일단 여기다가 가져다 둠. 추후에 지워도됨
                     offsetX = pref.getFloat("offsetX",0f)
                     offsetZ = pref.getFloat("offsetZ",0f)
-//                    Log.v("offsetX",offsetX.toString())
-//                    Log.v("offsetZ",offsetZ.toString())
+                    Log.v("offsetX",offsetX.toString())
+                    Log.v("offsetZ",offsetZ.toString())
 
                     //@@@@@@ 이부분 써야됨
                     //raw_x.text = "x : " + x
@@ -283,8 +297,8 @@ class MyService: Service() {
                         }
                         editor.putInt("goodTime", goodTime).apply()
                     }
-                    Log.v("SHP_바른자세시간", goodTime.toString())
-                    Log.v("SHP_포인트", point.toString())
+//                    Log.v("SHP_바른자세시간", goodTime.toString())
+//                    Log.v("SHP_포인트", point.toString())
                     //%%
 
                     editor.putFloat("xFloat", xint).apply()
@@ -296,6 +310,31 @@ class MyService: Service() {
 
                     //lrangle.text = "좌우 기울기 각도 : " + currentLR.toInt() + " (±5°)"
                     //fbangle.text = "앞뒤 기울기 각도 : " + currentFB.toInt() + " (±5°)"
+
+
+                    posture.putData(currentLR.toInt(), currentFB.toInt(),1)
+
+                    if(setNotify){
+                        var currentTime = System.currentTimeMillis()
+                        var timeGap = (currentTime - startTime)/1000
+                        Log.v("timeGap",timeGap.toString())
+                        if(timeGap.toInt() % alarmInterval == 0) {
+                            var msg = posture.getIntervalAlarm()
+                            notificationHandler.notify(msg, intent)
+
+                            Log.v("checkAlarm", msg)
+                            Log.v("checkPosture", posture.testAlarm())
+                        }
+                        if (posture.isBadContinue(10)) {
+                            var msg = posture.getContinueAlarm()
+                            notificationHandler.notify(msg, intent)
+                            posture.badPostureContinueCount = 0 // 연속 데이터 초기화
+                        }
+
+                    }
+
+
+
                 }
         )
     }

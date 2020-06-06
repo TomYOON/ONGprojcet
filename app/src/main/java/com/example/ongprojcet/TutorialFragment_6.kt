@@ -24,12 +24,12 @@ class TutorialFragment_6 : Fragment() {
 
 
 
-    override fun onPause() {
-        //프레그먼트 바뀔 때 asynctask 종료
-        Log.v("fragment", "onPause")
-        asyncTask.cancel(true)
-        super.onPause()
-    }
+//    override fun onPause() {
+//        //프레그먼트 바뀔 때 asynctask 종료
+//        Log.v("fragment", "onPause")
+//        asyncTask.cancel(true)
+//        super.onPause()
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,16 +50,25 @@ class TutorialFragment_6 : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        //홈버튼 누리고 돌아오면 onViewCreated로 안가고 resume으로 옴.
-        //그래서 onResume에서 asyncTask 호출
-        asyncTask = currentTask(requireContext(),notification,startButton, progressBar)
-        asyncTask.execute()  //start asyncTask
+
+//        asyncTask = currentTask(requireContext(),notification,startButton, progressBar)
+//        asyncTask.execute()  //start asyncTask
 
         startButton.setOnClickListener {
             val intent = Intent(activity, MainActivity::class.java)
             startActivity(intent)
         }
 
+    }
+
+    override fun onResume() {
+        Log.v("frag_6","onResume")
+        super.onResume()
+
+
+
+        asyncTask = currentTask(requireContext(),notification,startButton, progressBar)
+        asyncTask.execute()  //start asyncTask
     }
 
     //AsyncTask
@@ -116,7 +125,10 @@ class TutorialFragment_6 : Fragment() {
 
 
         override fun doInBackground(vararg p0: Void?): Void? {
-            Log.v("SHP_isBluetoothRunning홈", pref.getBoolean("isBluetoothRunning", false).toString())
+            Log.v("SHP_isBluetoothRunning_frag6", pref.getBoolean("isBluetoothRunning", false).toString())
+
+            editor.putFloat("offsetX",0f).apply() //기존 저장값 리셋
+            editor.putFloat("offsetZ",0f).apply()
             while(!isCancelled){
                 //현재 값 가져오기
                 isBluetoothRunning = pref.getBoolean("isBluetoothRunning", false);
@@ -160,8 +172,10 @@ class TutorialFragment_6 : Fragment() {
             offsetZ = calOffsetZ(zArray)
             editor.putFloat("offsetX",offsetX).apply()
             editor.putFloat("offsetZ",offsetZ).apply()
+            Log.v("offsetModified", "true")
             progressBar.visibility =View.GONE
-
+            xArray.clear()
+            zArray.clear()
 
             super.onProgressUpdate(*values)
         }

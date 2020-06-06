@@ -1,25 +1,19 @@
 package com.example.ongprojcet
 
-import android.app.*
-import android.content.Context
+
+import android.app.Activity
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.RelativeLayout
-import android.widget.RemoteViews
-import android.widget.Toolbar
-import androidx.fragment.app.FragmentTransaction
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.notification_layout.*
-import java.io.File
 
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
@@ -31,8 +25,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     lateinit var notificationManager: NotificationManager
     lateinit var notificationChannel : NotificationChannel
     lateinit var builder : Notification.Builder
-    private val channelId = "com.example.ongprojcet"
-    private val description = "Test notification"
+
 
 
     private val notificationHandler2: NotificationHandler by lazy {
@@ -55,10 +48,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             //튜토리얼 안갔을 때에만 서비스 실행. 갔을 때에는 튜토리얼에서 이미 실행함
             var serviceClass = MyService::class.java
             var serviceIntent = Intent(applicationContext, serviceClass)
+            startService(serviceIntent)
+
             var notiService = NotificationService::class.java
             var serviceIntent2 = Intent(applicationContext, notiService)
             startService(serviceIntent2)
-            startService(serviceIntent)
+
 
         }
         //**
@@ -90,8 +85,49 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 val donationFragment = DonationFragment()
                 supportFragmentManager.beginTransaction().replace(R.id.main_layout, donationFragment).commit()
             }
+
         }
         return true
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.example_menu, menu)
+        return true
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.item1 -> {
+                val pref: SharedPreferences = getSharedPreferences("checkFirst", Activity.MODE_PRIVATE)
+                val editor: SharedPreferences.Editor = pref.edit()
+
+                editor.putFloat("offsetX",0f).apply() //기존 저장값 리셋
+                editor.putFloat("offsetZ",0f).apply()
+
+                val intent = Intent(this, TutorialSettingActivity::class.java)
+                intent.putExtra("fromMain",true)
+                startActivity(intent)
+                true
+            }
+            R.id.item2 -> {
+                Toast.makeText(this, "Item 2 selected", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.item3 -> {
+                Toast.makeText(this, "Item 3 selected", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.subitem1 -> {
+                Toast.makeText(this, "Sub Item 1 selected", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.subitem2 -> {
+                Toast.makeText(this, "Sub Item 2 selected", Toast.LENGTH_SHORT).show()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
 }
 

@@ -137,21 +137,21 @@ class PostureFragment : Fragment(){
                     Thread.sleep(1000)
                     secCount += 1
 
-                    if(secCount % alarmInterval==0){ //일정 간격으로 알람
-                        var msg = posture.getIntervalAlarm()
-                        notificationHandler.notify(msg,intent)
-
-                        Log.v("checkAlarm",msg)
-                        Log.v("checkPosture",posture.testAlarm())
-//                        posture.resetData()
-
-                    }
-                    if(posture.isBadContinue()){  //연속적으로 나쁜자세 취할경우 알람
-                        var msg = posture.getContinueAlarm()
-                        notificationHandler.notify(msg,intent)
-                        posture.badPostureContinueCount = 0 // 연속 데이터 초기화
-
-                    }
+//                    if(secCount % alarmInterval==0){ //일정 간격으로 알람
+//                        var msg = posture.getIntervalAlarm()
+//                        notificationHandler.notify(msg,intent)
+//
+//                        Log.v("checkAlarm",msg)
+//                        Log.v("checkPosture",posture.testAlarm())
+////                        posture.resetData()
+//
+//                    }
+//                    if(posture.isBadContinue()){  //연속적으로 나쁜자세 취할경우 알람
+//                        var msg = posture.getContinueAlarm()
+//                        notificationHandler.notify(msg,intent)
+//                        posture.badPostureContinueCount = 0 // 연속 데이터 초기화
+//
+//                    }
 
                     publishProgress()  //update UI
 

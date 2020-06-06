@@ -13,8 +13,11 @@ class Posture(){
     var postureString = arrayOf("앞+오른쪽","앞","앞+왼쪽","왼 쪽","good","오른쪽","뒤 + 왼쪽","뒷 쪽","뒤+오른쪽")
     var postures = IntArray(9){0} // 자세 count 저장하는 array
 
+    var timeCount = 0
+
     val abnormalThreshold = 10 //안좋은 자세의 정도 : 10도를 넘기면 안좋다고 일단 작성
     val abnormalContThreshold = 10 //안좋은 자세를 10번 연속으로 취하면 안좋다고 생각하고 일단 작성
+    val secPerData = 5
 
 
 
@@ -62,8 +65,33 @@ class Posture(){
         }
         this.lrAngleList.add(lrAngle)
         this.fbAngleList.add(fbAngle)
+    }
+
+    @Override
+    fun putData(lrAngle: Int, fbAngle:Int, interval:Int)  {
+        /*interval에 초를 입력하면 초당 5개 들어온다고 가정하여 5개 데이터중 1개만 받음*/
+
+        var perData = interval*secPerData
+        timeCount %= perData
+        timeCount += 1
+        if(perData % timeCount == 0){
+            var index = checkPosture(lrAngle,fbAngle)
+            postures[index] += 1
+            if(index == 4) {
+                goodPosture +=1
+                badPostureContinueCount = 0
+            }
+            else {
+                badPosture +=1
+                badPostureContinueCount += 1
+            }
+            this.lrAngleList.add(lrAngle)
+            this.fbAngleList.add(fbAngle)
+        }
+
 
     }
+
 
 
     fun getContinueAlarm() : String {
@@ -97,8 +125,8 @@ class Posture(){
         return returnMsg
     }
 
-    fun isBadContinue(): Boolean {
-        if(badPostureContinueCount > abnormalContThreshold) return true
+    fun isBadContinue(continueNum : Int = 10): Boolean {
+        if(badPostureContinueCount > continueNum) return true
         return false
     }
 

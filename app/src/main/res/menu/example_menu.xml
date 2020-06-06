@@ -2,25 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/item1"
+        android:id="@+id/setting_icon"
         android:icon="@drawable/ic_brightness_high_black_24dp"
         android:title="Item 1"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/item2"
-        android:title="Item 2"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/item3"
-        android:title="Item 3"
-        app:showAsAction="never">
+        app:showAsAction="ifRoom">
         <menu>
             <item
-                android:id="@+id/subitem1"
-                android:title="Sub Item 1" />
+                android:id="@+id/setting"
+                android:title="환경설정" />
             <item
-                android:id="@+id/subitem2"
-                android:title="Sub Item 2" />
+                android:id="@+id/re_measure"
+                android:title="바른자세 다시 측정하기" />
         </menu>
+
+
     </item>
 </menu>

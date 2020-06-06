@@ -48,6 +48,12 @@
                 <category android:name="android.intent.category.ALTERNATIVE"/>
             </intent-filter>
         </activity>
+        <activity android:name=".SettingsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.ALTERNATIVE"/>
+            </intent-filter>
+        </activity>
         <service android:name=".MyService"/> <!-- 거비스 등록 ** -->
         <service android:name=".NotificationService"/>
     </application>

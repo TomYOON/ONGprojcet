@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
+                  android:iconSpaceReserved="false">
+    <PreferenceCategory
+        android:title="알람"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            android:key="key_switch_notification"
+            android:title="On / Off"
+            android:icon="@mipmap/ic_launcher"
+            android:switchTextOff="Off"
+            app:switchTextOn="On"
+            android:defaultValue="false"/>
+        <ListPreference
+            android:key="key_set_interval"
+            android:title="알람 주기"
+            android:summary="알람 주기를 선택하세요."
+            android:entries="@array/alarm_interval_list"
+            android:entryValues="@array/action_values"
+            android:dialogTitle="알람 주기"
+            android:dependency="key_switch_notification"
+            app:iconSpaceReserved="false"/>
+<!--        <SeekBarPreference-->
+<!--            android:id="@+id/preference_delay_seek_bar"-->
+<!--            android:dependency="key_comp_switch_notification"-->
+<!--            android:title="알람 주기(분)"-->
+<!--            android:defaultValue="1"-->
+<!--            app:showSeekBarValue="true"-->
+<!--            android:max="60"/>-->
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="개발중.."
+        app:iconSpaceReserved="false">
+
+        <EditTextPreference
+            android:key="key_edit_name"
+            android:title="Edit name"
+            android:summary="Edit your name"
+            android:dialogTitle="Edit your name"
+            app:iconSpaceReserved="false"/>
+
+
+
+        <PreferenceScreen
+            android:title="웰트 홈페이지"
+            android:summary="https://www.weltcorp.com/"
+            app:iconSpaceReserved="false">
+            <intent android:action="android.intent.action.VIEW"
+                    android:data="https://www.weltcorp.com/" />
+        </PreferenceScreen>
+
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

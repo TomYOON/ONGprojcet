@@ -8,12 +8,15 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
@@ -22,19 +25,24 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         NotificationHandler(applicationContext)
     }
 
+
     lateinit var notificationManager: NotificationManager
     lateinit var notificationChannel : NotificationChannel
     lateinit var builder : Notification.Builder
 
 
 
-    private val notificationHandler2: NotificationHandler by lazy {
-        NotificationHandler(applicationContext)
-    }
+
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+
 
 
 
@@ -66,6 +74,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         bottomNavigationView.setOnNavigationItemSelectedListener(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+    }
+
+
     override fun onNavigationItemSelected(p0: MenuItem): Boolean {
 
         when (p0.itemId) {
@@ -90,14 +104,18 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         return true
     }
 
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.example_menu, menu)
         return true
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        var pref2 : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        var bol = pref2.getBoolean("key_switch_notification",false)
+
         return when (item.itemId) {
-            R.id.item1 -> {
+            R.id.re_measure -> {
                 val pref: SharedPreferences = getSharedPreferences("checkFirst", Activity.MODE_PRIVATE)
                 val editor: SharedPreferences.Editor = pref.edit()
 
@@ -108,25 +126,16 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 intent.putExtra("fromMain",true)
                 startActivity(intent)
                 true
+
             }
-            R.id.item2 -> {
-                Toast.makeText(this, "Item 2 selected", Toast.LENGTH_SHORT).show()
+            R.id.setting -> {
+                supportFragmentManager.beginTransaction().replace(R.id.main_layout, MainPreference()).commit()
                 true
             }
-            R.id.item3 -> {
-                Toast.makeText(this, "Item 3 selected", Toast.LENGTH_SHORT).show()
-                true
-            }
-            R.id.subitem1 -> {
-                Toast.makeText(this, "Sub Item 1 selected", Toast.LENGTH_SHORT).show()
-                true
-            }
-            R.id.subitem2 -> {
-                Toast.makeText(this, "Sub Item 2 selected", Toast.LENGTH_SHORT).show()
-                true
-            }
+
             else -> super.onOptionsItemSelected(item)
         }
+
     }
 
 }

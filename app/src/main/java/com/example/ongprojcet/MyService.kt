@@ -9,6 +9,7 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.IBinder
+import androidx.preference.PreferenceManager
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
@@ -31,6 +32,7 @@ class MyService: Service() {
     lateinit var editor: SharedPreferences.Editor
     lateinit var now:String
 
+
     //자세과련
     private val subscription: CompositeSubscription by lazy { CompositeSubscription() }
     private var connected: Boolean = false
@@ -46,6 +48,9 @@ class MyService: Service() {
 
 
     //알림 관련
+    lateinit var settingPref : SharedPreferences
+
+
     val notificationHandler: NotificationHandler by lazy {
         NotificationHandler(applicationContext)
     }
@@ -53,7 +58,7 @@ class MyService: Service() {
     var alarmInterval = 10
     var currentTime = 0L
     var setNotify = false
-
+    var isNotify = false
 
 
     var offsetX = 0f
@@ -75,6 +80,14 @@ class MyService: Service() {
         //init
         pref = getSharedPreferences("checkFirst", Activity.MODE_PRIVATE)
         editor = pref.edit()
+
+        settingPref = PreferenceManager.getDefaultSharedPreferences(this) //settingPref는 전역에서 파일이름 없이 사용가능함
+        setNotify = settingPref.getBoolean("key_switch_notification",false)
+
+        var strAlarm = settingPref.getString("key_set_interval","10분")
+        alarmInterval = alarmIntervalParsing(strAlarm!!)
+
+
         offsetX = pref.getFloat("offsetX",0f)
         offsetZ = pref.getFloat("offsetZ",0f)
         Log.v("offsetX",offsetX.toString())
@@ -224,6 +237,8 @@ class MyService: Service() {
         var startTime = System.currentTimeMillis()
         var intent = Intent(this, MainActivity::class.java)
 
+//        setNotify = sps.getBoolean("key_add_notification", false)
+
 
 
 
@@ -249,8 +264,10 @@ class MyService: Service() {
                     //test를 위해 일단 여기다가 가져다 둠. 추후에 지워도됨
                     offsetX = pref.getFloat("offsetX",0f)
                     offsetZ = pref.getFloat("offsetZ",0f)
-                    Log.v("offsetX",offsetX.toString())
-                    Log.v("offsetZ",offsetZ.toString())
+//                    Log.v("offsetX",offsetX.toString())
+//                    Log.v("offsetZ",offsetZ.toString())
+
+
 
                     //@@@@@@ 이부분 써야됨
                     //raw_x.text = "x : " + x
@@ -312,11 +329,16 @@ class MyService: Service() {
                     //fbangle.text = "앞뒤 기울기 각도 : " + currentFB.toInt() + " (±5°)"
 
 
+                    var strAlarm = settingPref.getString("key_set_interval","10분")
+                    alarmInterval = alarmIntervalParsing(strAlarm!!) //10분 -> 10초로 설정해둠
+                    setNotify = settingPref.getBoolean("key_switch_notification",false) //Listener 기술을 아직 못써서 일단 계속 갱신시킴
+
                     posture.putData(currentLR.toInt(), currentFB.toInt(),1)
 
+                    var currentTime = System.currentTimeMillis()
+                    var timeGap = (currentTime - startTime)/1000
                     if(setNotify){
-                        var currentTime = System.currentTimeMillis()
-                        var timeGap = (currentTime - startTime)/1000
+
                         Log.v("timeGap",timeGap.toString())
                         if(timeGap.toInt() % alarmInterval == 0) {
                             var msg = posture.getIntervalAlarm()
@@ -325,13 +347,20 @@ class MyService: Service() {
                             Log.v("checkAlarm", msg)
                             Log.v("checkPosture", posture.testAlarm())
                         }
-                        if (posture.isBadContinue(10)) {
+                        if (posture.isBadContinue(60)) {
                             var msg = posture.getContinueAlarm()
                             notificationHandler.notify(msg, intent)
                             posture.badPostureContinueCount = 0 // 연속 데이터 초기화
                         }
+                        isNotify = true
 
                     }
+//                    if(isNotify){
+//                        if(timeGap.toInt() % alarmInterval+1 == 0) {
+//                            isNotify = false
+//                        }
+//                    }
+
 
 
 
@@ -357,6 +386,20 @@ class MyService: Service() {
 
     override fun onBind(p0: Intent?): IBinder? {
         TODO("Not yet implemented")
+    }
+
+
+
+    fun alarmIntervalParsing(strInterval : String) : Int{ //일단 test를 위해 시간을 낮춤
+        //    <item>10분</item>
+        //    <item>30분</item>
+        //    <item>1시간</item>
+        //    <item>2시간</item>
+        if(strInterval == "10분") return 10
+        if(strInterval == "30분") return 30
+        if(strInterval == "30분") return 60
+        if(strInterval == "30분") return 120
+        return 10
     }
 
 }

@@ -29,13 +29,15 @@
         app:itemBackground="@color/cardview_dark_background"
         app:itemIconTint="@drawable/item_color"
         app:labelVisibilityMode="unlabeled"
+        android:name="com.example.ongprojcet.MainPreference"
         app:menu="@menu/menu_bottom" />
+
 
 <!--    <fragment-->
 <!--        android:id="@+id/main_pref"-->
 <!--        android:name="com.example.ongprojcet.MainPreference"-->
 <!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
+<!--        android:layout_height="676dp"-->
 <!--        app:layout_constraintBottom_toBottomOf="parent"-->
 <!--        app:layout_constraintLeft_toLeftOf="parent"-->
 <!--        app:layout_constraintRight_toRightOf="parent"-->

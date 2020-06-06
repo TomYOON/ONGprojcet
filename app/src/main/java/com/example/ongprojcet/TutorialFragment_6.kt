@@ -18,21 +18,6 @@ import kotlinx.android.synthetic.main.fragment_tutorial_6.startButton
 
 import java.util.ArrayList
 
-//class TutorialFragment_6 : Fragment(){
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        return inflater.inflate(R.layout.fragment_tutorial_6, container, false)
-//    }
-//
-//    override fun onActivityCreated(savedInstanceState: Bundle?) {
-//        super.onActivityCreated(savedInstanceState)
-//
-//
-//        }
-//    }
 
 class TutorialFragment_6 : Fragment() {
     lateinit var asyncTask: currentTask

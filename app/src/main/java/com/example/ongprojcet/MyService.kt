@@ -235,8 +235,8 @@ class MyService: Service() {
                     //test를 위해 일단 여기다가 가져다 둠. 추후에 지워도됨
                     offsetX = pref.getFloat("offsetX",0f)
                     offsetZ = pref.getFloat("offsetZ",0f)
-                    Log.v("offsetX",offsetX.toString())
-                    Log.v("offsetZ",offsetZ.toString())
+//                    Log.v("offsetX",offsetX.toString())
+//                    Log.v("offsetZ",offsetZ.toString())
 
                     //@@@@@@ 이부분 써야됨
                     //raw_x.text = "x : " + x

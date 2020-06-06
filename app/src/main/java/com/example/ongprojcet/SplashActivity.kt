@@ -33,6 +33,7 @@ class SplashActivity : AppCompatActivity(){
                 editor.commit()
 
                 editor.putInt("point", 1000).apply() //** 일단 1000
+                editor.putInt("goodTime",0).apply()  //%% 좋은 자세로 앉아 있었던 시간 초기화
 
                 val intent = Intent(this, PermissionActivity::class.java)
                 startActivity(intent)

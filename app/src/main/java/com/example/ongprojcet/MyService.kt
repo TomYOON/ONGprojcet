@@ -47,6 +47,8 @@ class MyService: Service() {
 
     var offsetX = 0f
     var offsetZ = 0f
+    var goodTime = 0 //%%
+    var point =0 //%%
 
     //val checkFirst: Boolean = pref.getBoolean("checkFirst", false);
 
@@ -265,11 +267,30 @@ class MyService: Service() {
                     editor.putFloat("currentLR", currentLR.toFloat()).apply()
                     editor.putFloat("currentFB", currentFB.toFloat()).apply()
 
+                    //%% 포인트 적립 (실제로는 5분에 1p지만 여기서는 잘 보여주기 위해서 일단 1분에 1p)
+                    //1초에 블루투스 인식 5번 됨
+                    goodTime = pref.getInt("goodTime",0)
+                    if(currentLR.toFloat()<=10.0f && currentFB.toFloat()<=10.0f){
+                        //좌우 앞뒤 모두 바른 자세이면 (바른자세라는건 둘다 10도 내)
+                        goodTime++
+                        if(goodTime >= 300){  //5분이면 1500. 여기선는 1분으로 할거니까 300
+                            //5분 단위로 1p 적립 (1시간에 12p)
+                            //1초에 5번정도 블투 인식됨. 1분이면 300번. 5분이면 1500
+                            point = pref.getInt("point",0)
+                            point++
+                            editor.putInt("point", point).apply()
+                            goodTime = 0  //다시 처음부터 시작
+                        }
+                        editor.putInt("goodTime", goodTime).apply()
+                    }
+                    Log.v("SHP_바른자세시간", goodTime.toString())
+                    Log.v("SHP_포인트", point.toString())
+                    //%%
 
                     editor.putFloat("xFloat", xint).apply()
                     editor.putFloat("zFloat",zint).apply()
 
-//                    Log.v("SHP_현재시분초", now)
+                    Log.v("SHP_현재시분초", now)
 //                    Log.v("SHP_LR"+now, currentLR.toString())
 //                    Log.v("SHP_FB"+now, currentFB.toString())
 

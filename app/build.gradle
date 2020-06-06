@@ -83,7 +83,8 @@ dependencies {
     compile 'com.pm10:indicator:1.0.2'//인디케이터
     implementation 'com.google.code.gson:gson:2.8.5'
 
-    implementation 'com.airbnb.android:lottie:2.5.5'  //**
+    implementation 'com.airbnb.android:lottie:2.5.5'
+    implementation files('libs\\YouTubeAndroidPlayerApi.jar')  //**
 }
 
 repositories {

@@ -3,26 +3,72 @@ package com.example.ongprojcet
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
+import com.google.android.youtube.player.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_donation.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
     lateinit var asyncTask: currentTask
+    lateinit var videoId:String;
+    private val youtubeAPIKey = "AIzaSyBoFWKSgwIAjZVjJASoO8_cVwOzjCaq6NY";  //안써도 왜 되는걸까 신기함
+
+    var videoTitleList = arrayOf(
+        "바르게 앉는 법",
+        "오래 앉아 있는 사람들을 위한 영상",
+        "디스크 있는 사람들을 위한 영상",
+        "디스크 자가 진단과 스트레칭",
+        "앉아서 하는 스트레칭1",
+        "앉아서 하는 스트레칭2")  //스피너에 나올 키워드 목록
+
+    var videoIdList = arrayOf(
+        "Rjv7hnHkgXE",
+        "KNvldxi8TwU",
+        "_RXjbRdiFBs",
+        "N1SzXAHUhvo",
+        "-JzaMksAeew",
+        "5V8a5_LXXQs"
+    )
 
     override fun onPause() {
         //프레그먼트 바뀔 때 asynctask 종료
         Log.v("fragment", "onPause")
         asyncTask.cancel(true)
         super.onPause()
+    }
+
+    fun getYoutube(){
+        //video
+        youtubeThumbnailView.initialize("develop", object : YouTubeThumbnailView.OnInitializedListener {
+            override fun onInitializationSuccess(youTubeThumbnailView: YouTubeThumbnailView, youTubeThumbnailLoader: YouTubeThumbnailLoader) {
+                youTubeThumbnailLoader.setVideo(videoId)
+                youTubeThumbnailLoader.setOnThumbnailLoadedListener(object : YouTubeThumbnailLoader.OnThumbnailLoadedListener {
+                    override fun onThumbnailLoaded(youTubeThumbnailView: YouTubeThumbnailView, s: String) {
+                        youTubeThumbnailLoader.release()
+                    }
+
+                    override fun onThumbnailError(youTubeThumbnailView: YouTubeThumbnailView, errorReason: YouTubeThumbnailLoader.ErrorReason) {}
+                })
+            }
+
+            override fun onInitializationFailure(youTubeThumbnailView: YouTubeThumbnailView, youTubeInitializationResult: YouTubeInitializationResult) {}
+        })
+
+        youtubeThumbnailView.setOnClickListener {
+            //마지막 인자 true로 하면 전체화면 XX
+            val intent = YouTubeStandalonePlayer.createVideoIntent(activity, "develop", videoId, 0, true, false)
+            startActivity(intent)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,8 +86,22 @@ class HomeFragment : Fragment() {
         down.setImageResource(R.drawable.downw)
         center.setImageResource(R.drawable.heartw)
 
-        Log.v("fragment", "onViewCreated")
+        //spinner
+        youtube_spinner.setSelection(0)  //처음 요소가 기본값
+        youtube_spinner.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, videoTitleList)
+        youtube_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
 
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                Log.v("spinner check", "listener 호출됨")
+                videoId = videoIdList[position]
+                getYoutube()
+            }
+        }
+
+
+        Log.v("fragment", "onViewCreated")
     }
 
     override fun onCreateView(
@@ -88,10 +148,12 @@ class HomeFragment : Fragment() {
         lateinit var pref: SharedPreferences
         var currentLR: Float = 0.0f
         var currentFB: Float = 0.0f
-        var goodLR: Float = 0.0f
-        var goodFB: Float = 0.0f
+        //var goodLR: Float = 0.0f
+        //var goodFB: Float = 0.0f
         var status: Int = 0
         var isBluetoothRunning:Boolean = false;
+        var limit = 5;  // 0~5 => 좋은 자세, 5~10 => 그냥 그런 자세, 10~ => 나쁜자세
+
 
         init {
             this.mContext = mContext
@@ -133,17 +195,17 @@ class HomeFragment : Fragment() {
                     status = 0
 
                     //LR
-                    if (goodLR - 5 <= currentLR && currentLR <= goodLR + 5) {  //~ 5도
+                    if (-limit <= currentLR && currentLR <= limit) {  //-5 ~ 5도
                         //좋은 자시
-                    } else if (goodLR - 10 <= currentLR && currentLR <= goodLR + 10)  //5도 ~ 10도
+                    } else if (-limit * 2 <= currentLR && currentLR <= limit * 2)  //5도 ~ 10도
                         status = status + 1
                     else  //10도 ~
                         status = status + 2
 
                     //FB
-                    if (goodFB - 5 <= currentFB && currentFB <= goodFB + 5) {
+                    if (-limit <= currentFB && currentFB <= limit) {
                         //좋은 자시
-                    } else if (goodFB - 10 <= currentFB && currentFB <= goodFB + 10)
+                    } else if (-limit * 2 <= currentFB && currentFB <= limit*2)
                         status = status + 1
                     else
                         status = status + 2
@@ -151,16 +213,6 @@ class HomeFragment : Fragment() {
                     Log.v("current_LR", currentLR.toString())
                     Log.v("current_FB", currentFB.toString())
                     Log.v("current_status", status.toString())
-
-                    /*
-                if(isFirstCurrent){
-                    //처음에는 서비스 도는데 좀 걸리니까 시간 좀 길게
-                    Thread.sleep(5000)
-                    isFirstCurrent = false
-                }
-                else
-                    Thread.sleep(2000)  //안하면 에러남... 메모리 너무 많이 쓴다고... 1000으로 해도 됨
-                */
 
                     publishProgress()  //update UI
 
@@ -192,12 +244,12 @@ class HomeFragment : Fragment() {
             var isGood:Boolean = true
 
             //arrow
-            if(currentLR > goodLR+5){
+            if(currentLR > limit){
                 isGood = false
                 left.setImageResource(R.drawable.leftw)
                 right.setImageResource(R.drawable.rightb)
             }
-            else if(currentLR < goodLR-5){
+            else if(currentLR < limit){
                 isGood = false
                 left.setImageResource(R.drawable.leftb)
                 right.setImageResource(R.drawable.rightw)
@@ -207,12 +259,12 @@ class HomeFragment : Fragment() {
                 right.setImageResource(R.drawable.rightw)
             }
 
-            if(currentFB > goodFB+5){
+            if(currentFB > limit){
                 isGood = false
                 down.setImageResource(R.drawable.downw)
                 up.setImageResource(R.drawable.upb)
             }
-            else if(currentFB < goodFB-5){
+            else if(currentFB < limit){
                 isGood = false
                 down.setImageResource(R.drawable.downb)
                 up.setImageResource(R.drawable.upw)
@@ -228,17 +280,17 @@ class HomeFragment : Fragment() {
                 center.setImageResource(R.drawable.heartw)
 
             //Textview
-            if (currentLR > goodLR)
-                LR_text = "오른쪽으로 " + (currentLR-goodLR).toString() + "도"
-            else if (currentLR < goodLR)
-                LR_text = "왼쪽 " + (-1 * (currentLR-goodLR)).toString() + "도"
+            if (currentLR > 0)
+                LR_text = "오른쪽으로 " + currentLR.toString() + "도"
+            else if (currentLR < 0)
+                LR_text = "왼쪽 " + (-1 * currentLR).toString() + "도"
             else
                 LR_text = "좌우기준 정가운데"
 
-            if (currentFB > goodFB)
-                FB_text = "앞으로 " + (currentFB-goodFB).toString() + "도"
-            else if (currentFB < goodFB)
-                FB_text = "뒤로 " + (-1 * (currentFB-goodFB)).toString() + "도"
+            if (currentFB > 0)
+                FB_text = "앞으로 " + currentFB.toString() + "도"
+            else if (currentFB < 0)
+                FB_text = "뒤로 " + (-1 * currentFB).toString() + "도"
             else
                 FB_text = "앞뒤기준 정가운데"
 
@@ -249,7 +301,4 @@ class HomeFragment : Fragment() {
         }
 
     }
-
-
 }
-

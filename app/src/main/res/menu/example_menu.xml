@@ -13,6 +13,7 @@
             <item
                 android:id="@+id/re_measure"
                 android:title="바른자세 다시 측정하기" />
+
         </menu>
 
 

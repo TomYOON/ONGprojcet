@@ -9,7 +9,7 @@
         <SwitchPreferenceCompat
             android:key="key_switch_notification"
             android:title="On / Off"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/ic_launcher_alarm"
             android:switchTextOff="Off"
             app:switchTextOn="On"
             android:defaultValue="false"/>
@@ -18,30 +18,18 @@
             android:title="알람 주기"
             android:summary="알람 주기를 선택하세요."
             android:entries="@array/alarm_interval_list"
-            android:entryValues="@array/action_values"
+            android:entryValues="@array/alarm_interval_list"
             android:dialogTitle="알람 주기"
             android:dependency="key_switch_notification"
             app:iconSpaceReserved="false"/>
-<!--        <SeekBarPreference-->
-<!--            android:id="@+id/preference_delay_seek_bar"-->
-<!--            android:dependency="key_comp_switch_notification"-->
-<!--            android:title="알람 주기(분)"-->
-<!--            android:defaultValue="1"-->
-<!--            app:showSeekBarValue="true"-->
-<!--            android:max="60"/>-->
+
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="개발중.."
+        android:title="기타"
         app:iconSpaceReserved="false">
 
-        <EditTextPreference
-            android:key="key_edit_name"
-            android:title="Edit name"
-            android:summary="Edit your name"
-            android:dialogTitle="Edit your name"
-            app:iconSpaceReserved="false"/>
 
 
 
@@ -52,7 +40,14 @@
             <intent android:action="android.intent.action.VIEW"
                     android:data="https://www.weltcorp.com/" />
         </PreferenceScreen>
-
+        <MultiSelectListPreference
+            android:key="team_info"
+            android:title="개발팀 정보"
+            android:summary="웰트 &amp; 옹글"
+            android:entries="@array/team_info"
+            android:entryValues="@array/team_info"
+            android:dialogTitle="웰트 &amp; 옹글"
+            app:iconSpaceReserved="false"/>
 
     </PreferenceCategory>
 

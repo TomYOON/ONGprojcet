@@ -6,10 +6,19 @@
         <item>1시간</item>
         <item>2시간</item>
     </string-array>
-    <string-array name="action_values">
-        <item>value 1</item>
-        <item>value 2</item>
-        <item>value 3</item>
-        <item>value 4</item>
+    <integer-array  name="interval_value">
+        <item>10</item>
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+    </integer-array>
+    <string-array name="team_info">
+        <item>(웰트:멘토) 이화영</item>
+        <item>(옹글:팀장) 최지원</item>
+        <item>(옹글) 곽민정</item>
+        <item>(옹글) 권지은</item>
+        <item>(옹글) 박민기</item>
+        <item>(옹글) 윤태성</item>
     </string-array>
+
 </resources>

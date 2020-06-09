@@ -445,8 +445,8 @@ class MyService: Service() {
         //    <item>2시간</item>
         if(strInterval == "10분") return 10
         if(strInterval == "30분") return 30
-        if(strInterval == "30분") return 60
-        if(strInterval == "30분") return 120
+        if(strInterval == "1시간") return 60
+        if(strInterval == "2시간") return 120
         return 10
     }
 

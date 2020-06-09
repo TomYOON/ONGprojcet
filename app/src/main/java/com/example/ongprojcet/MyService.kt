@@ -32,6 +32,9 @@ class MyService: Service() {
     lateinit var editor: SharedPreferences.Editor
     lateinit var now:String
 
+    lateinit var saveResult: SharedPreferences
+    lateinit var saveResultEditor: SharedPreferences.Editor
+
 
     //자세과련
     private val subscription: CompositeSubscription by lazy { CompositeSubscription() }
@@ -80,6 +83,9 @@ class MyService: Service() {
         //init
         pref = getSharedPreferences("checkFirst", Activity.MODE_PRIVATE)
         editor = pref.edit()
+
+        saveResult = getSharedPreferences("saveResult", Activity.MODE_PRIVATE)
+        saveResultEditor = saveResult.edit()
 
         settingPref = PreferenceManager.getDefaultSharedPreferences(this) //settingPref는 전역에서 파일이름 없이 사용가능함
         setNotify = settingPref.getBoolean("key_switch_notification",false)
@@ -280,6 +286,7 @@ class MyService: Service() {
                     var currentLR = ((xint) * 0.0053 + 0.7373) * -1
                     var currentFB = (zint) * (-0.0064) + 1.9747
 
+                    putData(currentLR.toInt(),currentFB.toInt())
                     //current time **
                     //2020년 5월 16일 오후 8시 25분 30초 -> 2020-05-16-20-25-30
                     var nowDate = LocalDate.now()
@@ -368,6 +375,47 @@ class MyService: Service() {
         )
     }
 
+    val abnormalThreshold = 10
+    var postures = FloatArray(9){0f}
+    fun checkPosture(lrAngle: Int, fbAngle: Int): Int {
+        if(lrAngle > abnormalThreshold){  //오른쪽으로 기울었을 경우
+            if(fbAngle > abnormalThreshold) { //오른쪽 + 앞
+                return 0
+            }
+            else if(fbAngle < -abnormalThreshold) { //오른쪽 + 뒤
+                return 8
+            }
+            return 5  //오른쪽만
+        } else if(lrAngle < -abnormalThreshold) { //왼쪽인 경우
+            if(fbAngle > abnormalThreshold) { //왼쪽 + 앞
+                return 2
+            }
+            else if(fbAngle < -abnormalThreshold) { // 왼쪽 + 뒤
+                return 6
+            }
+            return 3 //왼쪽만
+        }
+
+        if(fbAngle > abnormalThreshold) return 1 //앞 쪽만
+        else if (fbAngle < -abnormalThreshold) return 7 //뒷쪽만
+
+        return 4 // 정상
+    }
+
+    fun putData(lrAngle: Int, fbAngle:Int)  {
+        var index = checkPosture(lrAngle,fbAngle)
+        postures[index] += 0.2f
+        saveResultEditor.putBoolean("isBluetoothRunning", true).apply()
+        //련재 값은 따로 계속 갱신
+        saveResultEditor.putFloat("front_left", postures[0].toFloat()).apply()
+        saveResultEditor.putFloat("front", postures[1].toFloat()).apply()
+        saveResultEditor.putFloat("front_right", postures[2].toFloat()).apply()
+        saveResultEditor.putFloat("left", postures[3].toFloat()).apply()
+        saveResultEditor.putFloat("right", postures[5].toFloat()).apply()
+        saveResultEditor.putFloat("back_left", postures[6].toFloat()).apply()
+        saveResultEditor.putFloat("back", postures[7].toFloat()).apply()
+        saveResultEditor.putFloat("back_right", postures[8].toFloat()).apply()
+    }
     // 블루투스 연결 에러 처리
     fun onConnectionError(t: Throwable) {
         connected = false

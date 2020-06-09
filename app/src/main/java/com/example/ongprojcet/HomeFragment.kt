@@ -249,7 +249,7 @@ class HomeFragment : Fragment() {
                 left.setImageResource(R.drawable.leftw)
                 right.setImageResource(R.drawable.rightb)
             }
-            else if(currentLR < limit){
+            else if(currentLR < -limit){
                 isGood = false
                 left.setImageResource(R.drawable.leftb)
                 right.setImageResource(R.drawable.rightw)
@@ -264,7 +264,7 @@ class HomeFragment : Fragment() {
                 down.setImageResource(R.drawable.downw)
                 up.setImageResource(R.drawable.upb)
             }
-            else if(currentFB < limit){
+            else if(currentFB < -limit){
                 isGood = false
                 down.setImageResource(R.drawable.downb)
                 up.setImageResource(R.drawable.upw)

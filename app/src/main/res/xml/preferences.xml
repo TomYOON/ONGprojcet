@@ -8,7 +8,7 @@
 
         <SwitchPreferenceCompat
             android:key="key_switch_notification"
-            android:title="On / Off"
+            android:title="주기 알람  On / Off"
             android:icon="@mipmap/ic_launcher_alarm"
             android:switchTextOff="Off"
             app:switchTextOn="On"
@@ -22,6 +22,14 @@
             android:dialogTitle="알람 주기"
             android:dependency="key_switch_notification"
             app:iconSpaceReserved="false"/>
+        <SwitchPreferenceCompat
+            android:key="key_switch_notification_realtime"
+            android:title="실시간 알람  On / Off"
+            android:summary="연속으로 나쁜 자세를 취할 경우 알람"
+            android:icon="@mipmap/ic_launcher_alarm"
+            android:switchTextOff="Off"
+            app:switchTextOn="On"
+            android:defaultValue="false"/>
 
 
     </PreferenceCategory>

@@ -7,6 +7,8 @@
     //연한노랑 배경
     <color name="colorBackgroundYellow">#fdfff0</color>
 
+    <color name="blue12">#34495E</color>
+
     //블루투스
     <color name="colorDivider">#E1E4E6</color>
 </resources>

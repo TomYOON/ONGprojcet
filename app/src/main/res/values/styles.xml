@@ -1,16 +1,50 @@
 <resources>
 
-    <!-- Base application theme. -->
+<!--     Base application theme.-->
+<!--    상속에 유의해서 넘겨야됨 android:actionBarStyle로 넘기면 안됨-->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#F6DC7E</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">#34495E</item>
+        <item name="android:textColor">#34495E</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+
     </style>
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="titleTextStyle">@style/MyTitleTextStyle</item>
+    </style>
+
+    <style name="MyTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">#34495E</item>
+    </style>
+
+    <style name="PreferenceTheme" parent="@style/AppTheme">
+        <item name="android:colorBackground">@color/colorBackgroundYellow</item>
+    </style>
+
+
+<!--    <style name="MyTheme" parent="@android:style/Theme.Holo.Light">-->
+<!--        <item name="android:actionBarStyle">@style/MyTheme.ActionBarStyle</item>-->
+<!--    </style>-->
+
+<!--    <style name="MyTheme.ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">-->
+<!--        <item name="android:titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>-->
+<!--    </style>-->
+
+<!--    <style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">-->
+<!--        <item name="android:textColor">#34495E</item>-->
+<!--    </style>-->
+
+
 
     <!--splash 화면에 사용될 테마-->
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
+
+<!--    <style name="PreferencesTheme">-->
+<!--        <item name="android:background">android:background="#FDFFF0"</item>-->
+<!--    </style>-->
 
 </resources>

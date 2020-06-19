@@ -12,6 +12,7 @@ import android.os.IBinder
 import androidx.preference.PreferenceManager
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.ongprojcet.BLE.applyUISchedulers
 import com.google.android.material.snackbar.Snackbar
@@ -61,6 +62,7 @@ class MyService: Service() {
     var alarmInterval = 10
     var currentTime = 0L
     var setNotify = false
+    var setNotiftyRealtime = false
     var isNotify = false
 
 
@@ -89,6 +91,7 @@ class MyService: Service() {
 
         settingPref = PreferenceManager.getDefaultSharedPreferences(this) //settingPref는 전역에서 파일이름 없이 사용가능함
         setNotify = settingPref.getBoolean("key_switch_notification",false)
+        setNotiftyRealtime = settingPref.getBoolean("key_switch_notification_realtime", false)
 
         var strAlarm = settingPref.getString("key_set_interval","10분")
         alarmInterval = alarmIntervalParsing(strAlarm!!)
@@ -251,6 +254,7 @@ class MyService: Service() {
 
 
 
+
         subscription.add(
             deviceConn!!.writeCharacteristic(BLE.controlPointUUID, BLE.byteFactory(BLE.Action.RAW_ACCELEROMETER, null))
                 .flatMap { deviceConn!!.setupNotification(BLE.notifyUUID) }
@@ -318,6 +322,10 @@ class MyService: Service() {
                             point++
                             editor.putInt("point", point).apply()
                             goodTime = 0  //다시 처음부터 시작
+                            Toast.makeText(this, "기부 포인트 +1", Toast.LENGTH_SHORT).show()
+
+
+
                         }
                         editor.putInt("goodTime", goodTime).apply()
                     }
@@ -339,7 +347,7 @@ class MyService: Service() {
                     var strAlarm = settingPref.getString("key_set_interval","10분")
                     alarmInterval = alarmIntervalParsing(strAlarm!!) //10분 -> 10초로 설정해둠
                     setNotify = settingPref.getBoolean("key_switch_notification",false) //Listener 기술을 아직 못써서 일단 계속 갱신시킴
-
+                    setNotiftyRealtime = settingPref.getBoolean("key_switch_notification_realtime", false)
                     posture.putData(currentLR.toInt(), currentFB.toInt(),1)
 
                     var currentTime = System.currentTimeMillis()
@@ -354,13 +362,14 @@ class MyService: Service() {
                             Log.v("checkAlarm", msg)
                             Log.v("checkPosture", posture.testAlarm())
                         }
-                        if (posture.isBadContinue(60)) {
+
+                    }
+                    if(setNotiftyRealtime) {
+                        if (posture.isBadContinue(15)) {
                             var msg = posture.getContinueAlarm()
                             notificationHandler.notify(msg, intent)
                             posture.badPostureContinueCount = 0 // 연속 데이터 초기화
                         }
-                        isNotify = true
-
                     }
 //                    if(isNotify){
 //                        if(timeGap.toInt() % alarmInterval+1 == 0) {

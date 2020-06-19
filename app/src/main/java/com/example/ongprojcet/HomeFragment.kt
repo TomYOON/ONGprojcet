@@ -281,7 +281,7 @@ class HomeFragment : Fragment() {
 
             //Textview
             if (currentLR > 0)
-                LR_text = "오른쪽으로 " + currentLR.toString() + "도"
+                LR_text = "오른쪽 " + currentLR.toString() + "도"
             else if (currentLR < 0)
                 LR_text = "왼쪽 " + (-1 * currentLR).toString() + "도"
             else
